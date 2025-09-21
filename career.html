@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Your Career Path | AI Advisor</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px);} to { opacity:1; transform: translateY(0);} }
+    .animate-fadeIn { animation: fadeIn 0.8s ease forwards; }
+    .glass { background: rgba(17,25,40,0.8); backdrop-filter: blur(12px) saturate(140%); border: 1px solid rgba(255,255,255,0.06); }
+  </style>
+</head>
+<body class="bg-gray-900 text-gray-200 min-h-screen flex items-center justify-center p-6">
+  <div class="glass bg-gray-800/80 backdrop-blur-xl rounded-3xl shadow-2xl p-8 lg:p-12 max-w-4xl w-full">
+    <h1 class="text-4xl font-bold text-center mb-6 text-indigo-400">🚀 Your Personalized Career Path</h1>
+
+    <div id="career-content" class="prose max-w-none text-gray-300 space-y-6"></div>
+
+    <div class="text-center mt-10 space-x-4">
+      <button onclick="window.location.href='index.html'" class="bg-gray-700 px-6 py-3 rounded-xl hover:bg-gray-600">⬅️ Back</button>
+      <button onclick="window.location.href='interview.html'" class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold px-6 py-3 rounded-xl hover:scale-105 transition">🎤 Start Mock Interview</button>
+    </div>
+  </div>
+
+  <script>
+    // CAREFUL: API key is visible in frontend (OK for your hackathon demo)
+    const GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyBZmmg2IjlEjuDWABLqJthNk-tj8tW_bTc";
+
+    async function generateCareerAdvice() {
+      const stored = localStorage.getItem("careerData");
+      if (!stored) {
+        alert("No profile found. Please fill the form first.");
+        window.location.href = "index.html";
+        return;
+      }
+      const data = JSON.parse(stored);
+      const contentDiv = document.getElementById("career-content");
+      contentDiv.innerHTML = "⏳ Generating your career path with AI...";
+
+      try {
+        const response = await fetch(GEMINI_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [
+              {
+                parts: [
+                  {
+                    text: `You are a helpful career advisor. Provide a clear, step-by-step career path and roles (entry, mid, advanced) for this student. Respond using plain text with sensible line breaks.
+
+User profile:
+Skills: ${data.skills}
+Interests: ${data.interests}
+Background: ${data.background}
+
+Include short bullet-style actionable steps and 1-2 suggested project ideas.`
+                  }
+                ]
+              }
+            ]
+          })
+        });
+
+        const result = await response.json();
+        console.log("Gemini raw:", result);
+
+        const aiText = result?.candidates?.[0]?.content?.parts?.[0]?.text || result?.output_text || JSON.stringify(result, null, 2);
+
+        // Split into lines and remove empty ones
+        let lines = aiText.split("\n").map(l => l.trim()).filter(l => l !== "");
+
+        // Build card HTML (fancy)
+        const cardsHtml = lines.map((line, i) => {
+          const delay = (i * 0.18).toFixed(2);
+          // Treat numbered steps or "Step" as highlighted gradient cards
+          if (/^\d+[\).]/.test(line) || /^Step\s*\d+/i.test(line) || /^Entry-level|Mid-level|Advanced/i.test(line)) {
+            return `
+              <div class="p-4 bg-gradient-to-r from-indigo-700 to-purple-700 rounded-xl shadow-lg border border-indigo-400/25 opacity-0 animate-fadeIn" style="animation-delay:${delay}s;">
+                <p class="font-semibold text-white">${line}</p>
+              </div>
+            `;
+          } else if (/^- /.test(line) || /^\•/.test(line) || /^\*/.test(line)) {
+            // bullet-like lines -> lighter card
+            return `
+              <div class="p-3 bg-gray-700/50 rounded-xl shadow-md opacity-0 animate-fadeIn" style="animation-delay:${delay}s;">
+                <p class="text-gray-200">• ${line.replace(/^-+\s*/, '')}</p>
+              </div>
+            `;
+          } else {
+            // normal paragraph in softer card
+            return `
+              <div class="p-4 bg-gray-700/40 rounded-xl shadow-md opacity-0 animate-fadeIn" style="animation-delay:${delay}s;">
+                <p class="text-gray-200">${line}</p>
+              </div>
+            `;
+          }
+        }).join("");
+
+        // Learning resources (dynamic by input)
+        const studyLinks = `
+          <ul class="list-disc pl-6 space-y-2 mt-4">
+            <li><a href="https://www.youtube.com/results?search_query=${encodeURIComponent(data.skills)}+${encodeURIComponent(data.interests)}+tutorial" target="_blank" class="text-indigo-300 hover:underline">🎥 YouTube: ${data.skills} & ${data.interests} tutorials</a></li>
+            <li><a href="https://www.coursera.org/courses?query=${encodeURIComponent(data.interests)}" target="_blank" class="text-purple-300 hover:underline">🎓 Coursera: ${data.interests} courses</a></li>
+            <li><a href="https://www.udemy.com/courses/search/?q=${encodeURIComponent(data.skills)}" target="_blank" class="text-indigo-300 hover:underline">📘 Udemy: Master ${data.skills}</a></li>
+            <li><a href="https://cloudskillsboost.google/search?search=${encodeURIComponent(data.interests)}" target="_blank" class="text-purple-300 hover:underline">☁️ Google Cloud Skills Boost</a></li>
+          </ul>
+        `;
+
+        // Assemble the final HTML
+        contentDiv.innerHTML = `
+          <h2 class="text-2xl font-bold text-indigo-300 mb-2">✨ Based on your profile</h2>
+          <div class="bg-gray-800 p-4 rounded mb-4">
+            <div><b>Skills:</b> ${escapeHtml(data.skills)}</div>
+            <div><b>Interests:</b> ${escapeHtml(data.interests)}</div>
+            <div><b>Background:</b> ${escapeHtml(data.background)}</div>
+          </div>
+
+          <div class="mt-6 space-y-4">${cardsHtml}</div>
+
+          <h2 class="text-2xl font-semibold text-indigo-300 mt-8">📚 Free Learning Resources</h2>
+          ${studyLinks}
+        `;
+
+      } catch (err) {
+        console.error(err);
+        contentDiv.innerHTML = "<div class='text-red-400'>❌ Error connecting to Gemini API. Check network and your API key.</div>";
+      }
+    }
+
+    // small helper to avoid XSS when inserting user inputs
+    function escapeHtml(str) {
+      if (!str) return "";
+      return String(str).replace(/[&<>"]/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[s]));
+    }
+
+    window.onload = generateCareerAdvice;
+  </script>
+</body>
+</html>
