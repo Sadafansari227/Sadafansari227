@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mock Interview | AI Advisor</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white flex flex-col items-center justify-center min-h-screen p-6 space-y-6">
+  <h1 class="text-3xl font-bold text-indigo-400">🎤 Mock Interview</h1>
+  <video id="webcam" autoplay playsinline class="border-2 border-indigo-500 rounded-xl mb-4 max-w-md"></video>
+
+  <div class="glass bg-gray-800/80 p-6 rounded-xl text-center max-w-lg">
+    <h2 class="text-xl font-semibold text-purple-400 mb-2">💬 AI Question</h2>
+    <p id="question">Get ready for your first question...</p>
+    <h2 class="text-lg font-semibold text-green-400 mt-4">🗣 Your Answer</h2>
+    <p id="answer" class="italic text-gray-300">Waiting for your reply...</p>
+  </div>
+
+  <button onclick="window.location.href='index.html'" 
+    class="bg-gray-700 px-6 py-3 rounded-xl hover:bg-gray-600 mt-6">⬅️ Back to Home</button>
+
+  <script>
+    const questions = [
+      "Tell me about yourself.",
+      "Why do you want to work in this field?",
+      "What’s your biggest strength?",
+      "What’s a challenge you overcame?",
+      "Where do you see yourself in 5 years?"
+    ];
+
+    let qIndex = 0;
+    const questionBox = document.getElementById("question");
+    const answerBox = document.getElementById("answer");
+
+    function speak(text) {
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.rate = 1;
+      utter.pitch = 1;
+      utter.voice = speechSynthesis.getVoices()[0];
+      speechSynthesis.speak(utter);
+    }
+
+    function listen(callback) {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        alert("❌ Speech recognition not supported in this browser.");
+        return;
+      }
+      const recognition = new SpeechRecognition();
+      recognition.lang = "en-US";
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        answerBox.textContent = transcript;
+        callback();
+      };
+      recognition.onerror = () => {
+        answerBox.textContent = "⚠️ Couldn't catch that. Please try again.";
+        callback();
+      };
+      recognition.start();
+    }
+
+    function askNextQuestion() {
+      if (qIndex < questions.length) {
+        const q = questions[qIndex];
+        questionBox.textContent = "❓ " + q;
+        speak(q);
+
+        setTimeout(() => {
+          answerBox.textContent = "Listening...";
+          listen(() => {
+            qIndex++;
+            setTimeout(askNextQuestion, 2000);
+          });
+        }, 3000);
+      } else {
+        questionBox.textContent = "✅ Interview finished! Well done.";
+        speak("Great job! The interview is complete.");
+      }
+    }
+
+    async function startInterview() {
+      const webcam = document.getElementById('webcam');
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        webcam.srcObject = stream;
+        askNextQuestion();
+      } catch (err) {
+        alert("⚠️ Please allow camera access.");
+      }
+    }
+
+    window.onload = startInterview;
+  </script>
+</body>
+</html>
