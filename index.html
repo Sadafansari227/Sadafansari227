@@ -1,80 +1,408 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>AI Career Advisor | The Nexus Squad</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <style>
-    body { font-family: 'Inter', sans-serif;
-      background: linear-gradient(-45deg, #0f172a, #1e1b4b, #312e81, #1e293b);
-      background-size: 400% 400%; animation: gradientShift 12s ease infinite; }
-    @keyframes gradientShift { 0% {background-position: 0% 50%;} 50% {background-position: 100% 50%;} 100% {background-position: 0% 50%;} }
-    .glass { background: rgba(17,25,40,0.8); backdrop-filter: blur(12px) saturate(140%); border: 1px solid rgba(255,255,255,0.06); }
-  </style>
-</head>
-<body class="text-gray-200 flex items-center justify-center min-h-screen p-4">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <div class="container glass shadow-2xl rounded-3xl p-8 lg:p-12 space-y-10 animate-fadeUp max-w-3xl">
-    <header class="text-center space-y-3">
-      <h1 class="text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-500 animate-pulse">
-        AI-Driven Career Advisor
-      </h1>
-      <p class="text-lg text-gray-300">🚀 Your personalized roadmap to success, powered by Generative AI.</p>
-      <p class="text-sm text-indigo-300">By <span class="font-semibold">The Nexus Squad</span></p>
+    <title>AI Career Advisor | The Nexus Squad</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background:
+                radial-gradient(circle at top left, rgba(79, 70, 229, 0.20), transparent 35%),
+                radial-gradient(circle at bottom right, rgba(124, 58, 237, 0.16), transparent 35%),
+                #080b18;
+        }
+
+        .glass {
+            background: rgba(17, 24, 39, 0.78);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+        }
+
+        .input-field {
+            background: rgba(15, 23, 42, 0.75);
+            border: 1px solid rgba(99, 102, 241, 0.25);
+            transition: all 0.25s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: rgba(129, 140, 248, 0.8);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.10);
+            background: rgba(15, 23, 42, 0.95);
+        }
+
+        .input-field::placeholder {
+            color: #64748b;
+        }
+
+        .fade-up {
+            animation: fadeUp 0.7s ease forwards;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .button-hover {
+            transition: all 0.25s ease;
+        }
+
+        .button-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(99, 102, 241, 0.25);
+        }
+    </style>
+</head>
+
+
+<body class="min-h-screen text-gray-200">
+
+
+    <!-- HEADER -->
+    <header class="border-b border-white/5 bg-[#080b18]/90 backdrop-blur-xl">
+
+        <div class="max-w-6xl mx-auto px-6 lg:px-10 py-5">
+
+            <div class="flex items-center justify-between">
+
+                <div>
+                    <p class="text-xs sm:text-sm tracking-[0.28em] uppercase text-indigo-400 font-semibold">
+                        AI Career Advisor
+                    </p>
+
+                    <h1 class="text-2xl sm:text-3xl font-bold text-white mt-1">
+                        The Nexus Squad
+                    </h1>
+                </div>
+
+                <div class="hidden sm:flex items-center gap-2 text-sm text-gray-500">
+                    <span class="w-2 h-2 rounded-full bg-green-400"></span>
+                    AI Guidance
+                </div>
+
+            </div>
+
+        </div>
+
     </header>
 
-    <main class="space-y-6">
-      <form id="advisor-form" class="glass rounded-2xl p-6 shadow-inner space-y-5">
-        <h2 class="text-2xl font-semibold text-indigo-300">✨ Tell us about yourself</h2>
 
-        <div>
-          <label for="skills" class="block text-sm text-gray-400 mb-1">Your Skills</label>
-          <input type="text" id="skills" name="skills" required
-            class="w-full p-3 border border-indigo-500/40 rounded-xl bg-gray-800/50 text-white placeholder-gray-400"/>
-        </div>
+    <!-- MAIN -->
+    <main class="max-w-6xl mx-auto px-6 lg:px-10 py-10 lg:py-14">
 
-        <div>
-          <label for="interests" class="block text-sm text-gray-400 mb-1">Your Interests</label>
-          <input type="text" id="interests" name="interests" required
-            class="w-full p-3 border border-purple-500/40 rounded-xl bg-gray-800/50 text-white placeholder-gray-400"/>
-        </div>
 
-        <div>
-          <label for="background" class="block text-sm text-gray-400 mb-1">Your Academic Background</label>
-          <input type="text" id="background" name="background" required
-            class="w-full p-3 border border-indigo-500/40 rounded-xl bg-gray-800/50 text-white placeholder-gray-400"/>
-        </div>
+        <!-- HERO -->
+        <section class="text-center max-w-4xl mx-auto fade-up">
 
-        <button type="submit"
-          class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold py-3 px-6 rounded-xl shadow-lg hover:scale-105 transition">
-          🎯 Generate My Career Path
-        </button>
-      </form>
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full
+                        bg-indigo-500/10 border border-indigo-400/20
+                        text-indigo-300 text-sm font-medium mb-6">
 
-      <div class="text-center">
-        <a href="interview.html" class="inline-block bg-gray-700 px-6 py-2 rounded-xl text-sm">Or try a Mock Interview</a>
-      </div>
+                <span>🚀</span>
+                <span>Personalized Career Guidance</span>
+
+            </div>
+
+
+            <h2 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight text-white">
+
+                Discover Your
+                <span class="bg-gradient-to-r from-indigo-400 to-purple-400
+                             bg-clip-text text-transparent">
+                    Career Direction
+                </span>
+
+            </h2>
+
+
+            <p class="text-gray-400 text-base sm:text-lg leading-8 max-w-3xl mx-auto mt-5">
+
+                Tell us about your skills, interests, and academic background.
+                Our AI-powered career advisor will create a personalized roadmap
+                based on your current profile.
+
+            </p>
+
+        </section>
+
+
+        <!-- FORM AREA -->
+        <section class="max-w-3xl mx-auto mt-10 fade-up">
+
+
+            <div class="glass rounded-3xl p-6 sm:p-8 lg:p-10 shadow-2xl">
+
+
+                <!-- FORM HEADER -->
+                <div class="flex items-start gap-4 mb-8">
+
+                    <div class="w-12 h-12 rounded-xl
+                                bg-indigo-500/15
+                                border border-indigo-400/20
+                                flex items-center justify-center
+                                text-2xl flex-shrink-0">
+                        ✨
+                    </div>
+
+
+                    <div>
+
+                        <h3 class="text-2xl font-bold text-white">
+                            Tell us about yourself
+                        </h3>
+
+                        <p class="text-gray-500 text-sm mt-1">
+                            This information helps us personalize your career recommendation.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <form id="advisor-form" class="space-y-6">
+
+                  <!-- NAME -->
+<div>
+
+    <label
+        for="name"
+        class="block text-sm font-semibold text-gray-300 mb-2"
+    >
+        Your Name
+    </label>
+
+    <input
+        type="text"
+        id="name"
+        name="name"
+        required
+        placeholder="e.g. Sadab Ansari"
+        class="input-field w-full px-4 py-4 rounded-xl text-white"
+    >
+
+    <p class="text-xs text-gray-600 mt-2">
+        Enter your full name.
+    </p>
+
+</div>
+
+<!-- EMAIL -->
+<div>
+
+    <label
+        for="email"
+        class="block text-sm font-semibold text-gray-300 mb-2"
+    >
+        Your Email
+    </label>
+
+    <input
+        type="email"
+        id="email"
+        name="email"
+        required
+        placeholder="e.g. student@gmail.com"
+        class="input-field w-full px-4 py-4 rounded-xl text-white"
+    >
+
+    <p class="text-xs text-gray-600 mt-2">
+        Enter your email address for your student record.
+    </p>
+
+</div>
+
+
+                    <!-- SKILLS -->
+                    <div>
+
+                        <label
+                            for="skills"
+                            class="block text-sm font-semibold text-gray-300 mb-2"
+                        >
+                            Your Skills
+                        </label>
+
+                        <input
+                            type="text"
+                            id="skills"
+                            name="skills"
+                            required
+                            placeholder="e.g. Python, SQL, HTML, CSS, JavaScript"
+                            class="input-field w-full px-4 py-4 rounded-xl text-white"
+                        >
+
+                        <p class="text-xs text-gray-600 mt-2">
+                            Mention programming languages, technical skills, tools, or other abilities.
+                        </p>
+
+                    </div>
+
+
+                    <!-- INTERESTS -->
+                    <div>
+
+                        <label
+                            for="interests"
+                            class="block text-sm font-semibold text-gray-300 mb-2"
+                        >
+                            Your Interests
+                        </label>
+
+                        <input
+                            type="text"
+                            id="interests"
+                            name="interests"
+                            required
+                            placeholder="e.g. Artificial Intelligence, Web Development, Data Science"
+                            class="input-field w-full px-4 py-4 rounded-xl text-white"
+                        >
+
+                        <p class="text-xs text-gray-600 mt-2">
+                            Tell us what areas of technology or problem-solving interest you.
+                        </p>
+
+                    </div>
+
+
+                    <!-- BACKGROUND -->
+                    <div>
+
+                        <label
+                            for="background"
+                            class="block text-sm font-semibold text-gray-300 mb-2"
+                        >
+                            Your Academic Background
+                        </label>
+
+                        <input
+                            type="text"
+                            id="background"
+                            name="background"
+                            required
+                            placeholder="e.g. B.Sc. Information Technology, 3rd Year"
+                            class="input-field w-full px-4 py-4 rounded-xl text-white"
+                        >
+
+                        <p class="text-xs text-gray-600 mt-2">
+                            Include your degree, course, year, or relevant academic background.
+                        </p>
+
+                    </div>
+
+
+                    <!-- SUBMIT -->
+                    <button
+                        type="submit"
+                        class="button-hover w-full mt-3
+                               bg-gradient-to-r from-indigo-600 to-purple-600
+                               text-white font-bold
+                               py-4 px-6 rounded-xl
+                               shadow-lg"
+                    >
+
+                        <span class="text-lg">
+                            🎯 Generate My Career Path
+                        </span>
+
+                        <span class="block text-xs font-normal text-indigo-100 mt-1">
+                            Get your personalized AI career dashboard
+                        </span>
+
+                    </button>
+
+
+                </form>
+
+            </div>
+
+
+            <!-- MOCK INTERVIEW -->
+            <div class="mt-6 text-center">
+
+                <p class="text-sm text-gray-500 mb-3">
+                    Want to practice before your interview?
+                </p>
+
+                <a
+                    href="interview.html"
+                    class="inline-flex items-center gap-2
+                           px-5 py-3 rounded-xl
+                           bg-gray-800/80
+                           border border-white/5
+                           text-gray-300
+                           hover:bg-gray-700/80
+                           hover:text-white
+                           transition"
+                >
+                    🎤 Try a Mock Interview
+                </a>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- FOOTER -->
+        <footer class="text-center mt-12">
+
+            <div class="w-20 h-px bg-white/10 mx-auto mb-5"></div>
+
+            <p class="text-xs text-gray-600">
+                AI Career Advisor
+                <span class="text-indigo-400">•</span>
+                The Nexus Squad
+            </p>
+
+            <p class="text-xs text-gray-700 mt-2">
+                Personalized guidance for students
+            </p>
+
+        </footer>
+
+
     </main>
 
-    <footer class="text-center text-gray-400 text-xs mt-8">
-      &copy; 2025 <span class="text-indigo-400">The Nexus Squad</span>. All rights reserved.
-    </footer>
-  </div>
 
-  <script>
-    // store inputs and go to career page
-    document.getElementById('advisor-form').addEventListener('submit', function(event) {
-      event.preventDefault();
-      const data = {
-        skills: document.getElementById('skills').value.trim(),
-        interests: document.getElementById('interests').value.trim(),
-        background: document.getElementById('background').value.trim()
-      };
-      localStorage.setItem("careerData", JSON.stringify(data));
-      window.location.href = "career.html";
-    });
-  </script>
+    <!-- EXISTING FUNCTIONALITY — UNCHANGED -->
+    <script>
+document.getElementById("advisor-form").addEventListener("submit", function(event) {
+
+    event.preventDefault();
+
+    const data = {
+        name: document.getElementById("name").value.trim(),
+        email: document.getElementById("email").value.trim(),
+        skills: document.getElementById("skills").value.trim(),
+        interests: document.getElementById("interests").value.trim(),
+        background: document.getElementById("background").value.trim()
+    };
+
+    localStorage.setItem("careerData", JSON.stringify(data));
+
+    window.location.href = "career.html";
+});
+</script>
+
 </body>
 </html>

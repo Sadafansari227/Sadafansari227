@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Student Database | AI Career Advisor</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #111827;
+    color: #f3f4f6;
+    min-height: 100vh;
+}
+
+header {
+    padding: 28px 50px;
+    border-bottom: 1px solid #374151;
+    background: #151c2b;
+}
+
+.brand {
+    font-size: 13px;
+    letter-spacing: 4px;
+    color: #93c5fd;
+    font-weight: bold;
+}
+
+h1 {
+    margin-top: 6px;
+    font-size: 28px;
+}
+
+.subtitle {
+    margin-top: 8px;
+    color: #9ca3af;
+}
+
+.container {
+    padding: 35px 50px;
+}
+
+.top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.badge {
+    background: #1e3a5f;
+    color: #bfdbfe;
+    padding: 10px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+}
+
+.card {
+    background: #182131;
+    border: 1px solid #374151;
+    border-radius: 18px;
+    padding: 25px;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 1100px;
+}
+
+th {
+    text-align: left;
+    padding: 15px;
+    background: #202a3b;
+    color: #93c5fd;
+    font-size: 13px;
+    text-transform: uppercase;
+}
+
+td {
+    padding: 15px;
+    border-bottom: 1px solid #303b4f;
+    color: #d1d5db;
+    vertical-align: top;
+}
+
+tr:hover {
+    background: #1d2939;
+}
+
+.score {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 10px;
+    background: #1e40af;
+    color: white;
+    font-weight: bold;
+}
+
+.empty {
+    text-align: center;
+    padding: 50px;
+    color: #9ca3af;
+}
+
+button {
+    border: none;
+    padding: 11px 18px;
+    border-radius: 10px;
+    background: #4f7cff;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button:hover {
+    background: #3b67dc;
+}
+
+footer {
+    text-align: center;
+    padding: 30px;
+    color: #6b7280;
+    font-size: 13px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="brand">AI CAREER ADVISOR</div>
+    <h1>Student Database</h1>
+    <p class="subtitle">
+        Student profiles and AI-generated career recommendations
+    </p>
+</header>
+
+<div class="container">
+
+    <div class="top">
+        <div class="badge" id="recordCount">
+            Loading records...
+        </div>
+
+        <button onclick="loadStudents()">↻ Refresh</button>
+    </div>
+
+    <div class="card">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Student Name</th>
+                    <th>Email</th>
+                    <th>Skills</th>
+                    <th>Interests</th>
+                    <th>Academic Background</th>
+                    <th>Recommended Career</th>
+                    <th>Match Score</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+
+            <tbody id="studentTable">
+                <tr>
+                    <td colspan="9" class="empty">
+                        Loading student records...
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+</div>
+
+<footer>
+    AI-Based Personalized Career Guidance System for Students
+</footer>
+
+<script>
+
+async function loadStudents() {
+
+    const table = document.getElementById("studentTable");
+    const count = document.getElementById("recordCount");
+
+    try {
+
+        const response = await fetch("http://localhost:3000/api/students");
+
+        const result = await response.json();
+
+        if (!result.success) {
+            throw new Error(result.error);
+        }
+
+        const students = result.students;
+
+        count.textContent =
+            students.length + " Student Record" +
+            (students.length === 1 ? "" : "s");
+
+        if (students.length === 0) {
+
+            table.innerHTML = `
+                <tr>
+                    <td colspan="9" class="empty">
+                        No student records found.
+                    </td>
+                </tr>
+            `;
+
+            return;
+        }
+
+        table.innerHTML = students.map(student => {
+
+            const date = student.created_at
+                ? new Date(student.created_at).toLocaleString()
+                : "-";
+
+            return `
+                <tr>
+
+                    <td>${student.id ?? "-"}</td>
+
+                    <td>
+                        <strong>${student.name ?? "-"}</strong>
+                    </td>
+
+                    <td>${student.email ?? "-"}</td>
+
+                    <td>${student.skills ?? "-"}</td>
+
+                    <td>${student.interests ?? "-"}</td>
+
+                    <td>${student.background ?? "-"}</td>
+
+                    <td>
+                        <strong>
+                            ${student.career ?? "-"}
+                        </strong>
+                    </td>
+
+                    <td>
+                        <span class="score">
+                            ${student.match_score ?? "-"}%
+                        </span>
+                    </td>
+
+                    <td>${date}</td>
+
+                </tr>
+            `;
+
+        }).join("");
+
+    } catch (error) {
+
+        console.error(error);
+
+        count.textContent = "Database Error";
+
+        table.innerHTML = `
+            <tr>
+                <td colspan="9" class="empty">
+                    Unable to connect to the database server.
+                </td>
+            </tr>
+        `;
+    }
+}
+
+loadStudents();
+
+</script>
+
+</body>
+</html>

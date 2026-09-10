@@ -1,142 +1,1168 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Your Career Path | AI Advisor</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <style>
-    body { font-family: 'Inter', sans-serif; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px);} to { opacity:1; transform: translateY(0);} }
-    .animate-fadeIn { animation: fadeIn 0.8s ease forwards; }
-    .glass { background: rgba(17,25,40,0.8); backdrop-filter: blur(12px) saturate(140%); border: 1px solid rgba(255,255,255,0.06); }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Career Dashboard | AI Career Advisor</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background:
+                radial-gradient(circle at 10% 10%, rgba(99, 102, 241, 0.15), transparent 30%),
+                radial-gradient(circle at 90% 20%, rgba(168, 85, 247, 0.14), transparent 30%),
+                #070b17;
+        }
+
+        .glass {
+            background: rgba(15, 23, 42, 0.72);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+        }
+
+        .card {
+            background: rgba(15, 23, 42, 0.65);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(129, 140, 248, 0.35);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+        }
+
+        .fade-up {
+            opacity: 0;
+            transform: translateY(25px);
+            animation: fadeUp 0.7s ease forwards;
+        }
+
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .score-ring {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .score-ring::before {
+            content: "";
+            position: absolute;
+            width: 116px;
+            height: 116px;
+            border-radius: 50%;
+            background: #0f172a;
+        }
+
+        .score-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+
+        .skill-bar {
+            height: 9px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .skill-fill {
+            height: 100%;
+            width: 0;
+            border-radius: 999px;
+            background: linear-gradient(90deg, #6366f1, #a855f7);
+            transition: width 1.2s ease;
+        }
+
+        .roadmap-line {
+            position: absolute;
+            top: 29px;
+            left: 8%;
+            right: 8%;
+            height: 3px;
+            background: linear-gradient(90deg, #6366f1, #8b5cf6, #a855f7);
+            opacity: 0.5;
+        }
+
+        .roadmap-dot {
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #111827;
+            border: 3px solid #6366f1;
+            position: relative;
+            z-index: 2;
+            margin: auto;
+            font-size: 22px;
+        }
+
+        .gradient-text {
+            background: linear-gradient(90deg, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .loading-orb {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: 3px solid rgba(129, 140, 248, 0.2);
+            border-top-color: #818cf8;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
 </head>
-<body class="bg-gray-900 text-gray-200 min-h-screen flex items-center justify-center p-6">
-  <div class="glass bg-gray-800/80 backdrop-blur-xl rounded-3xl shadow-2xl p-8 lg:p-12 max-w-4xl w-full">
-    <h1 class="text-4xl font-bold text-center mb-6 text-indigo-400">🚀 Your Personalized Career Path</h1>
 
-    <div id="career-content" class="prose max-w-none text-gray-300 space-y-6"></div>
+<body class="text-gray-200 min-h-screen">
 
-    <div class="text-center mt-10 space-x-4">
-      <button onclick="window.location.href='index.html'" class="bg-gray-700 px-6 py-3 rounded-xl hover:bg-gray-600">⬅️ Back</button>
-      <button onclick="window.location.href='interview.html'" class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold px-6 py-3 rounded-xl hover:scale-105 transition">🎤 Start Mock Interview</button>
+    <!-- HEADER -->
+    <header class="border-b border-white/5 sticky top-0 z-50 bg-[#070b17]/80 backdrop-blur-xl">
+        <div class="max-w-7xl mx-auto px-5 py-4 flex items-center justify-between">
+
+            <div>
+                <p class="text-xs uppercase tracking-[0.25em] text-indigo-400 font-semibold">
+                    AI Career Advisor
+                </p>
+
+                <h1 class="text-xl md:text-2xl font-bold">
+                    Your Career Dashboard
+                </h1>
+            </div>
+
+            <div class="flex gap-2">
+
+                <button onclick="regenerate()"
+                    class="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition">
+                    🔄 <span class="hidden sm:inline">Regenerate</span>
+                </button>
+
+                <button onclick="window.location.href='index.html'"
+                    class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 transition font-semibold">
+                    ← Back
+                </button>
+
+            </div>
+
+        </div>
+    </header>
+
+
+    <main class="max-w-7xl mx-auto px-5 py-10">
+
+        <!-- LOADING -->
+        <div id="loading" class="flex flex-col items-center justify-center py-32">
+
+            <div class="loading-orb"></div>
+
+            <h2 class="text-xl font-semibold mt-6">
+                AI is analyzing your profile...
+            </h2>
+
+            <p class="text-gray-500 mt-2">
+                Building your personalized career strategy
+            </p>
+
+        </div>
+
+
+        <!-- DASHBOARD -->
+        <div id="dashboard" class="hidden space-y-8">
+
+
+            <!-- HERO -->
+            <section class="glass rounded-3xl p-7 md:p-10 fade-up">
+
+                <div class="grid lg:grid-cols-[1fr_auto] gap-8 items-center">
+
+                    <div>
+
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-sm mb-5">
+                            ✨ AI-Powered Recommendation
+                        </div>
+
+                        <p class="text-gray-400 text-sm mb-2">
+                            Your strongest career direction
+                        </p>
+
+                        <h2 id="careerTitle"
+                            class="text-4xl md:text-5xl font-extrabold gradient-text">
+                        </h2>
+
+                        <p id="careerSummary"
+                            class="text-gray-400 mt-5 max-w-3xl leading-7">
+                        </p>
+
+                    </div>
+
+
+                    <!-- SCORE -->
+                    <div class="flex justify-center">
+
+                        <div id="scoreRing" class="score-ring">
+
+                            <div class="score-content">
+
+                                <div id="matchScore"
+                                    class="text-4xl font-extrabold">
+                                    0%
+                                </div>
+
+                                <div class="text-xs text-gray-400 mt-1">
+                                    MATCH
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- PROFILE -->
+            <section class="grid md:grid-cols-3 gap-5 fade-up">
+
+                <div class="card rounded-2xl p-5">
+                    <p class="text-gray-500 text-sm">Your Skills</p>
+                    <p id="profileSkills" class="font-semibold mt-2"></p>
+                </div>
+
+                <div class="card rounded-2xl p-5">
+                    <p class="text-gray-500 text-sm">Your Interests</p>
+                    <p id="profileInterests" class="font-semibold mt-2"></p>
+                </div>
+
+                <div class="card rounded-2xl p-5">
+                    <p class="text-gray-500 text-sm">Background</p>
+                    <p id="profileBackground" class="font-semibold mt-2"></p>
+                </div>
+
+            </section>
+
+
+            <!-- WHY + SKILLS -->
+            <section class="grid lg:grid-cols-2 gap-6">
+
+
+                <!-- WHY FIT -->
+                <div class="card rounded-3xl p-7 fade-up">
+
+                    <div class="flex items-center gap-3 mb-6">
+
+                        <div class="w-11 h-11 rounded-xl bg-indigo-500/10 flex items-center justify-center text-xl">
+                            💡
+                        </div>
+
+                        <div>
+                            <h3 class="text-xl font-bold">
+                                Why This Career Fits
+                            </h3>
+
+                            <p class="text-sm text-gray-500">
+                                AI's reasoning
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <div id="whyFit" class="space-y-4"></div>
+
+                </div>
+
+
+                <!-- SKILL MATCH -->
+                <div class="card rounded-3xl p-7 fade-up">
+
+                    <div class="flex items-center gap-3 mb-6">
+
+                        <div class="w-11 h-11 rounded-xl bg-purple-500/10 flex items-center justify-center text-xl">
+                            📊
+                        </div>
+
+                        <div>
+                            <h3 class="text-xl font-bold">
+                                Skill Match
+                            </h3>
+
+                            <p class="text-sm text-gray-500">
+                                How prepared you are
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <div id="skillMatch" class="space-y-5"></div>
+
+                </div>
+
+            </section>
+
+
+            <!-- SKILL GAPS -->
+            <section class="card rounded-3xl p-7 fade-up">
+
+                <div class="flex items-center gap-3 mb-6">
+
+                    <div class="w-11 h-11 rounded-xl bg-red-500/10 flex items-center justify-center text-xl">
+                        🧠
+                    </div>
+
+                    <div>
+                        <h3 class="text-xl font-bold">
+                            Skills You Need to Build
+                        </h3>
+
+                        <p class="text-sm text-gray-500">
+                            Focus on these to become job-ready
+                        </p>
+                    </div>
+
+                </div>
+
+                <div id="skillGaps"
+                    class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                </div>
+
+            </section>
+<!-- CAREER READINESS -->
+<section class="card rounded-3xl p-7 md:p-9 fade-up">
+
+    <div class="mb-8">
+        <p class="text-indigo-400 text-sm font-semibold uppercase tracking-wider">
+            Your Progress
+        </p>
+
+        <h3 class="text-3xl font-bold mt-1">
+            🎯 Career Readiness
+        </h3>
+
+        <p class="text-gray-500 mt-2">
+            See how prepared you are for your recommended career.
+        </p>
     </div>
-  </div>
 
-  <script>
-    // CAREFUL: API key is visible in frontend (OK for your hackathon demo)
-    const GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=AIzaSyBZmmg2IjlEjuDWABLqJthNk-tj8tW_bTc";
+    <div class="grid md:grid-cols-3 gap-5">
 
-    async function generateCareerAdvice() {
-      const stored = localStorage.getItem("careerData");
-      if (!stored) {
-        alert("No profile found. Please fill the form first.");
-        window.location.href = "index.html";
-        return;
-      }
-      const data = JSON.parse(stored);
-      const contentDiv = document.getElementById("career-content");
-      contentDiv.innerHTML = "⏳ Generating your career path with AI...";
+        <!-- Overall Readiness -->
+        <div class="bg-gray-900/50 border border-gray-700/50 rounded-2xl p-6 text-center">
+            <p class="text-gray-400 text-sm mb-3">Overall Readiness</p>
 
-      try {
-        const response = await fetch(GEMINI_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            contents: [
-              {
-                parts: [
-                  {
-                    text: `You are a helpful career advisor. Provide a clear, step-by-step career path and roles (entry, mid, advanced) for this student. Respond using plain text with sensible line breaks.
+            <div class="text-5xl font-bold text-indigo-400">
+                <span id="readinessScore">0</span>%
+            </div>
 
-User profile:
-Skills: ${data.skills}
-Interests: ${data.interests}
-Background: ${data.background}
+            <p id="readinessLabel" class="text-gray-500 mt-3">
+                Calculating...
+            </p>
+        </div>
 
-Include short bullet-style actionable steps and 1-2 suggested project ideas.`
-                  }
-                ]
-              }
-            ]
-          })
-        });
+        <!-- Skills -->
+        <div class="bg-gray-900/50 border border-gray-700/50 rounded-2xl p-6">
+            <div class="flex items-center justify-between mb-4">
+                <p class="text-gray-400 text-sm">Skills Prepared</p>
+                <span class="text-2xl">💻</span>
+            </div>
 
-        const result = await response.json();
-        console.log("Gemini raw:", result);
+            <div class="text-3xl font-bold">
+                <span id="skillsReady">0</span>
+            </div>
 
-        const aiText = result?.candidates?.[0]?.content?.parts?.[0]?.text || result?.output_text || JSON.stringify(result, null, 2);
+            <p class="text-gray-500 text-sm mt-2">
+                skills already matching your career
+            </p>
+        </div>
 
-        // Split into lines and remove empty ones
-        let lines = aiText.split("\n").map(l => l.trim()).filter(l => l !== "");
+        <!-- Skill Gaps -->
+        <div class="bg-gray-900/50 border border-gray-700/50 rounded-2xl p-6">
+            <div class="flex items-center justify-between mb-4">
+                <p class="text-gray-400 text-sm">Skills to Build</p>
+                <span class="text-2xl">🚀</span>
+            </div>
 
-        // Build card HTML (fancy)
-        const cardsHtml = lines.map((line, i) => {
-          const delay = (i * 0.18).toFixed(2);
-          // Treat numbered steps or "Step" as highlighted gradient cards
-          if (/^\d+[\).]/.test(line) || /^Step\s*\d+/i.test(line) || /^Entry-level|Mid-level|Advanced/i.test(line)) {
-            return `
-              <div class="p-4 bg-gradient-to-r from-indigo-700 to-purple-700 rounded-xl shadow-lg border border-indigo-400/25 opacity-0 animate-fadeIn" style="animation-delay:${delay}s;">
-                <p class="font-semibold text-white">${line}</p>
-              </div>
-            `;
-          } else if (/^- /.test(line) || /^\•/.test(line) || /^\*/.test(line)) {
-            // bullet-like lines -> lighter card
-            return `
-              <div class="p-3 bg-gray-700/50 rounded-xl shadow-md opacity-0 animate-fadeIn" style="animation-delay:${delay}s;">
-                <p class="text-gray-200">• ${line.replace(/^-+\s*/, '')}</p>
-              </div>
-            `;
-          } else {
-            // normal paragraph in softer card
-            return `
-              <div class="p-4 bg-gray-700/40 rounded-xl shadow-md opacity-0 animate-fadeIn" style="animation-delay:${delay}s;">
-                <p class="text-gray-200">${line}</p>
-              </div>
-            `;
-          }
-        }).join("");
+            <div class="text-3xl font-bold">
+                <span id="skillsToBuild">0</span>
+            </div>
 
-        // Learning resources (dynamic by input)
-        const studyLinks = `
-          <ul class="list-disc pl-6 space-y-2 mt-4">
-            <li><a href="https://www.youtube.com/results?search_query=${encodeURIComponent(data.skills)}+${encodeURIComponent(data.interests)}+tutorial" target="_blank" class="text-indigo-300 hover:underline">🎥 YouTube: ${data.skills} & ${data.interests} tutorials</a></li>
-            <li><a href="https://www.coursera.org/courses?query=${encodeURIComponent(data.interests)}" target="_blank" class="text-purple-300 hover:underline">🎓 Coursera: ${data.interests} courses</a></li>
-            <li><a href="https://www.udemy.com/courses/search/?q=${encodeURIComponent(data.skills)}" target="_blank" class="text-indigo-300 hover:underline">📘 Udemy: Master ${data.skills}</a></li>
-            <li><a href="https://cloudskillsboost.google/search?search=${encodeURIComponent(data.interests)}" target="_blank" class="text-purple-300 hover:underline">☁️ Google Cloud Skills Boost</a></li>
-          </ul>
-        `;
+            <p class="text-gray-500 text-sm mt-2">
+                skills to focus on next
+            </p>
+        </div>
 
-        // Assemble the final HTML
-        contentDiv.innerHTML = `
-          <h2 class="text-2xl font-bold text-indigo-300 mb-2">✨ Based on your profile</h2>
-          <div class="bg-gray-800 p-4 rounded mb-4">
-            <div><b>Skills:</b> ${escapeHtml(data.skills)}</div>
-            <div><b>Interests:</b> ${escapeHtml(data.interests)}</div>
-            <div><b>Background:</b> ${escapeHtml(data.background)}</div>
-          </div>
+    </div>
 
-          <div class="mt-6 space-y-4">${cardsHtml}</div>
+    <!-- Progress Bar -->
+    <div class="mt-8">
+        <div class="flex justify-between text-sm mb-2">
+            <span class="text-gray-400">Career readiness</span>
+            <span id="readinessPercent" class="text-indigo-400 font-semibold">
+                0%
+            </span>
+        </div>
 
-          <h2 class="text-2xl font-semibold text-indigo-300 mt-8">📚 Free Learning Resources</h2>
-          ${studyLinks}
-        `;
+        <div class="w-full h-3 bg-gray-800 rounded-full overflow-hidden">
+            <div
+                id="readinessBar"
+                class="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full transition-all duration-1000"
+                style="width: 0%">
+            </div>
+        </div>
+    </div>
 
-      } catch (err) {
-        console.error(err);
-        contentDiv.innerHTML = "<div class='text-red-400'>❌ Error connecting to Gemini API. Check network and your API key.</div>";
-      }
-    }
+</section>
 
-    // small helper to avoid XSS when inserting user inputs
-    function escapeHtml(str) {
-      if (!str) return "";
-      return String(str).replace(/[&<>"]/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[s]));
-    }
+          
+            <section class="card rounded-3xl p-7 md:p-9 fade-up">
 
-    window.onload = generateCareerAdvice;
-  </script>
+                <div class="mb-10">
+
+                    <p class="text-indigo-400 text-sm font-semibold uppercase tracking-wider">
+                        Your journey
+                    </p>
+
+                    <h3 class="text-3xl font-bold mt-1">
+                        🗺️ Career Roadmap
+                    </h3>
+
+                    <p class="text-gray-500 mt-2">
+                        Follow these stages to move from beginner to job-ready.
+                    </p>
+
+                </div>
+
+
+                <div class="relative">
+
+                    <div class="roadmap-line hidden md:block"></div>
+
+                    <div id="roadmap"
+                        class="grid md:grid-cols-4 gap-8 relative">
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- PROJECTS -->
+            <section>
+
+                <div class="mb-6">
+
+                    <p class="text-purple-400 text-sm font-semibold uppercase tracking-wider">
+                        Build your portfolio
+                    </p>
+
+                    <h3 class="text-3xl font-bold mt-1">
+                        💼 Recommended Projects
+                    </h3>
+
+                    <p class="text-gray-500 mt-2">
+                        Projects selected to strengthen your profile.
+                    </p>
+
+                </div>
+
+                <div id="projects"
+                    class="grid md:grid-cols-3 gap-5">
+                </div>
+
+            </section>
+
+
+            <!-- CAREER LEVELS -->
+            <section>
+
+                <div class="mb-6">
+
+                    <p class="text-indigo-400 text-sm font-semibold uppercase tracking-wider">
+                        Career progression
+                    </p>
+
+                    <h3 class="text-3xl font-bold mt-1">
+                        🚀 Where This Can Lead
+                    </h3>
+
+                </div>
+
+
+                <div class="grid md:grid-cols-3 gap-5">
+
+                    <div class="card rounded-3xl p-6 border-t-2 border-indigo-500">
+
+                        <span class="text-xs uppercase tracking-wider text-indigo-400">
+                            Entry Level
+                        </span>
+
+                        <div id="entryRoles" class="mt-5 space-y-3"></div>
+
+                    </div>
+
+
+                    <div class="card rounded-3xl p-6 border-t-2 border-purple-500">
+
+                        <span class="text-xs uppercase tracking-wider text-purple-400">
+                            Mid Level
+                        </span>
+
+                        <div id="midRoles" class="mt-5 space-y-3"></div>
+
+                    </div>
+
+
+                    <div class="card rounded-3xl p-6 border-t-2 border-pink-500">
+
+                        <span class="text-xs uppercase tracking-wider text-pink-400">
+                            Advanced
+                        </span>
+
+                        <div id="advancedRoles" class="mt-5 space-y-3"></div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- LEARNING PLAN -->
+            <section class="card rounded-3xl p-7 fade-up">
+
+                <div class="flex items-center gap-3 mb-6">
+
+                    <div class="w-11 h-11 rounded-xl bg-blue-500/10 flex items-center justify-center text-xl">
+                        📚
+                    </div>
+
+                    <div>
+
+                        <h3 class="text-xl font-bold">
+                            Personalized Learning Plan
+                        </h3>
+
+                        <p class="text-sm text-gray-500">
+                            What you should focus on next
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <div id="learningPlan"
+                    class="grid md:grid-cols-2 gap-4">
+                </div>
+
+            </section>
+
+            <!-- LEARNING RESOURCES -->
+<section class="card rounded-3xl p-7 fade-up">
+
+    <div class="flex items-center gap-3 mb-2">
+        <div class="w-11 h-11 rounded-xl bg-indigo-500/10 text-indigo-300 flex items-center justify-center text-xl">
+            📚
+        </div>
+
+        <div>
+            <h3 class="text-2xl font-bold">Learning Resources</h3>
+            <p class="text-gray-400 text-sm">
+                Helpful resources to build the skills for your recommended career.
+            </p>
+        </div>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-4 mt-6">
+
+        <a href="https://www.youtube.com/" target="_blank"
+           class="p-5 rounded-2xl bg-white/[0.03] border border-white/5 hover:border-indigo-400/40 hover:bg-white/[0.05] transition">
+            <div class="text-2xl mb-2">🎥</div>
+            <h4 class="font-semibold text-lg">YouTube</h4>
+            <p class="text-gray-400 text-sm mt-1">
+                Free tutorials, programming lessons and project walkthroughs.
+            </p>
+            <span class="inline-block mt-3 text-indigo-300 text-sm">
+                Explore tutorials →
+            </span>
+        </a>
+
+        <a href="https://www.coursera.org/" target="_blank"
+           class="p-5 rounded-2xl bg-white/[0.03] border border-white/5 hover:border-indigo-400/40 hover:bg-white/[0.05] transition">
+            <div class="text-2xl mb-2">🎓</div>
+            <h4 class="font-semibold text-lg">Coursera</h4>
+            <p class="text-gray-400 text-sm mt-1">
+                Structured courses and professional learning programs.
+            </p>
+            <span class="inline-block mt-3 text-indigo-300 text-sm">
+                Explore courses →
+            </span>
+        </a>
+
+        <a href="https://www.udemy.com/" target="_blank"
+           class="p-5 rounded-2xl bg-white/[0.03] border border-white/5 hover:border-indigo-400/40 hover:bg-white/[0.05] transition">
+            <div class="text-2xl mb-2">📘</div>
+            <h4 class="font-semibold text-lg">Udemy</h4>
+            <p class="text-gray-400 text-sm mt-1">
+                Practical courses for programming, development and technology.
+            </p>
+            <span class="inline-block mt-3 text-indigo-300 text-sm">
+                Browse courses →
+            </span>
+        </a>
+
+        <a href="https://www.cloudskillsboost.google/" target="_blank"
+           class="p-5 rounded-2xl bg-white/[0.03] border border-white/5 hover:border-indigo-400/40 hover:bg-white/[0.05] transition">
+            <div class="text-2xl mb-2">☁️</div>
+            <h4 class="font-semibold text-lg">Google Cloud Skills Boost</h4>
+            <p class="text-gray-400 text-sm mt-1">
+                Hands-on labs and cloud technology learning resources.
+            </p>
+            <span class="inline-block mt-3 text-indigo-300 text-sm">
+                Start learning →
+            </span>
+        </a>
+
+    </div>
+
+</section>
+
+
+            <!-- FINAL CTA -->
+            <section class="glass rounded-3xl p-8 md:p-10 text-center fade-up">
+
+                <div class="text-4xl mb-4">
+                    🎤
+                </div>
+
+                <h3 class="text-3xl font-bold">
+                    Ready to test yourself?
+                </h3>
+
+                <p class="text-gray-400 mt-3 max-w-xl mx-auto">
+                    Practice realistic interview questions based on your recommended career path.
+                </p>
+
+                <button onclick="window.location.href='interview.html'"
+                    class="mt-7 px-7 py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:scale-105 transition font-bold shadow-lg">
+                    🎤 Start AI Mock Interview
+                </button>
+
+            </section>
+
+
+        </div>
+
+
+        <!-- ERROR -->
+        <div id="errorBox"
+            class="hidden max-w-xl mx-auto text-center py-20">
+
+            <div class="text-5xl mb-5">
+                ⚠️
+            </div>
+
+            <h2 class="text-2xl font-bold text-red-400">
+                Something went wrong
+            </h2>
+
+            <p id="errorMessage"
+                class="text-gray-400 mt-3">
+            </p>
+
+            <button onclick="regenerate()"
+                class="mt-6 px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500">
+                Try Again
+            </button>
+
+        </div>
+
+    </main>
+
+
+    <script>
+
+        let careerData = null;
+
+
+        async function generateCareerAdvice() {
+
+            const stored = localStorage.getItem("careerData");
+
+            if (!stored) {
+
+                alert("No profile found. Please fill the form first.");
+
+                window.location.href = "index.html";
+
+                return;
+            }
+
+
+            const profile = JSON.parse(stored);
+
+
+            document.getElementById("loading").classList.remove("hidden");
+            document.getElementById("dashboard").classList.add("hidden");
+            document.getElementById("errorBox").classList.add("hidden");
+
+
+            try {
+
+                const response = await fetch(
+                    "http://localhost:3000/api/career-advice",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+
+                  body: JSON.stringify({
+
+    name: profile.name,
+    email: profile.email,
+    skills: profile.skills,
+    interests: profile.interests,
+    background: profile.background
+
+})
+                    }
+                );
+
+
+                const result = await response.json();
+
+
+                if (!response.ok) {
+                    throw new Error(
+                        result.error || "Unable to generate recommendation."
+                    );
+                }
+
+
+               careerData = result.data?.data || result.data;
+
+
+                renderDashboard(profile, careerData);
+
+
+                document.getElementById("loading").classList.add("hidden");
+                document.getElementById("dashboard").classList.remove("hidden");
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                document.getElementById("loading").classList.add("hidden");
+                document.getElementById("errorBox").classList.remove("hidden");
+
+                document.getElementById("errorMessage").textContent =
+                    error.message;
+
+            }
+
+        }
+
+
+        function renderDashboard(profile, data) {
+
+            // Profile
+            document.getElementById("profileSkills").textContent =
+                profile.skills;
+
+            document.getElementById("profileInterests").textContent =
+                profile.interests;
+
+            document.getElementById("profileBackground").textContent =
+                profile.background;
+
+
+            // Career
+            document.getElementById("careerTitle").textContent =
+                data.career.title;
+
+            document.getElementById("careerSummary").textContent =
+                data.career.summary;
+
+// Alternative Careers
+const alternatives = data.alternativeCareers || [];
+
+const alternativeContainer = document.getElementById("alternativeCareers");
+
+if (alternativeContainer) {
+    alternativeContainer.innerHTML = alternatives.map((career, index) => `
+        <div class="bg-gray-800/60 border border-gray-700 rounded-2xl p-6 hover:border-indigo-500/50 transition">
+            
+            <div class="flex items-start justify-between gap-4">
+                <div>
+                    <span class="text-sm text-indigo-400 font-semibold">
+                        ${index === 0 ? "🥈 ALTERNATIVE CAREER" : "🥉 ANOTHER OPTION"}
+                    </span>
+
+                    <h3 class="text-xl font-bold text-white mt-2">
+                        ${escapeHtml(career.title)}
+                    </h3>
+                </div>
+
+                <div class="text-right">
+                    <div class="text-2xl font-bold text-indigo-400">
+                        ${Math.max(0, Math.min(100, Number(career.matchScore) || 0))}%
+                    </div>
+                    <div class="text-xs text-gray-500">
+                        MATCH
+                    </div>
+                </div>
+            </div>
+
+            <p class="text-gray-300 mt-4">
+                ${escapeHtml(career.reason)}
+            </p>
+
+            <div class="mt-5 flex items-center justify-between">
+                <span class="text-sm text-gray-400">
+                    Skill Gap
+                </span>
+
+                <span class="px-3 py-1 rounded-full text-xs font-semibold
+                    ${career.skillGap === "Low"
+                        ? "bg-green-500/10 text-green-400"
+                        : career.skillGap === "Medium"
+                            ? "bg-yellow-500/10 text-yellow-400"
+                            : "bg-red-500/10 text-red-400"}">
+                    ${escapeHtml(career.skillGap)}
+                </span>
+            </div>
+
+        </div>
+    `).join("");
+}
+            // Match score
+            const score = Math.max(
+                0,
+                Math.min(100, Number(data.career.matchScore) || 0)
+            );
+
+            document.getElementById("matchScore").textContent =
+                score + "%";
+
+            document.getElementById("scoreRing").style.background =
+                `conic-gradient(#6366f1 ${score * 3.6}deg, rgba(255,255,255,0.08) 0deg)`;
+
+
+            // Why fit
+            document.getElementById("whyFit").innerHTML =
+                (data.career.whyFit || [])
+                    .map((item, index) => `
+                        <div class="flex gap-4">
+                            <div class="w-8 h-8 shrink-0 rounded-lg bg-indigo-500/10 text-indigo-300 flex items-center justify-center font-bold">
+                                ${index + 1}
+                            </div>
+
+                            <p class="text-gray-300 leading-6">
+                                ${escapeHtml(item)}
+                            </p>
+                        </div>
+                    `)
+                    .join("");
+
+
+            // Skill match
+            document.getElementById("skillMatch").innerHTML =
+                (data.skillMatch || [])
+                    .map(item => {
+
+                        const skillScore = Math.max(
+                            0,
+                            Math.min(100, Number(item.score) || 0)
+                        );
+
+                        return `
+                            <div>
+
+                                <div class="flex justify-between mb-2">
+
+                                    <span class="font-medium">
+                                        ${escapeHtml(item.skill)}
+                                    </span>
+
+                                    <span class="text-indigo-300 font-semibold">
+                                        ${skillScore}%
+                                    </span>
+
+                                </div>
+
+                                <div class="skill-bar">
+
+                                    <div
+                                        class="skill-fill"
+                                        data-width="${skillScore}%">
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        `;
+
+                    })
+                    .join("");
+
+
+            // Animate skill bars
+            setTimeout(() => {
+
+                document
+                    .querySelectorAll(".skill-fill")
+                    .forEach(bar => {
+                        bar.style.width = bar.dataset.width;
+                    });
+
+            }, 200);
+
+
+            // Skill gaps
+            document.getElementById("skillGaps").innerHTML =
+                (data.skillGaps || [])
+                    .map(skill => `
+                        <div class="p-4 rounded-2xl bg-red-500/5 border border-red-500/10">
+                            <div class="flex gap-3 items-center">
+                                <span class="text-red-400">●</span>
+                                <span class="font-medium">
+                                    ${escapeHtml(skill)}
+                                </span>
+                            </div>
+                        </div>
+                    `)
+                    .join("");
+
+// Career Readiness
+const skillMatches = data.skillMatch || [];
+const skillGaps = data.skillGaps || [];
+
+// Use the AI's overall career match score
+let readiness = Number(data.career?.matchScore) || 0;
+
+// Keep score between 0 and 100
+readiness = Math.max(0, Math.min(100, readiness));
+
+// Update overall readiness
+document.getElementById("readinessScore").textContent = readiness;
+document.getElementById("readinessPercent").textContent = readiness + "%";
+
+// Update progress bar
+document.getElementById("readinessBar").style.width = readiness + "%";
+
+// Count skills
+const preparedSkills = skillMatches.filter(
+    item => Number(item.score) >= 60
+).length;
+
+document.getElementById("skillsReady").textContent = preparedSkills;
+document.getElementById("skillsToBuild").textContent = skillGaps.length;
+
+// Readiness label
+let readinessLabel = "Getting Started";
+
+if (readiness >= 80) {
+    readinessLabel = "Job Ready";
+} else if (readiness >= 60) {
+    readinessLabel = "Strong Progress";
+} else if (readiness >= 40) {
+    readinessLabel = "Building Skills";
+}
+
+document.getElementById("readinessLabel").textContent = readinessLabel;
+
+
+            // Roadmap
+            const roadmapIcons = ["🌱", "🛠️", "⚡", "🎯"];
+
+            document.getElementById("roadmap").innerHTML =
+                (data.roadmap || [])
+                    .map((stage, index) => `
+                        <div class="text-center">
+
+                            <div class="roadmap-dot">
+                                ${roadmapIcons[index] || "🚀"}
+                            </div>
+
+                            <h4 class="font-bold text-lg mt-5">
+                                ${escapeHtml(stage.stage)}
+                            </h4>
+
+                            <p class="text-indigo-300 text-sm mt-1">
+                                ${escapeHtml(stage.duration)}
+                            </p>
+
+                            <div class="mt-4 text-left space-y-2">
+
+                                ${(stage.goals || [])
+                                    .map(goal => `
+                                        <div class="text-sm text-gray-400 flex gap-2">
+                                            <span class="text-indigo-400">✓</span>
+                                            <span>${escapeHtml(goal)}</span>
+                                        </div>
+                                    `)
+                                    .join("")}
+
+                            </div>
+
+                        </div>
+                    `)
+                    .join("");
+
+
+            // Projects
+            const difficultyStyles = {
+                "Beginner": "text-green-300 bg-green-500/10",
+                "Intermediate": "text-yellow-300 bg-yellow-500/10",
+                "Advanced": "text-red-300 bg-red-500/10"
+            };
+
+
+            document.getElementById("projects").innerHTML =
+                (data.projects || [])
+                    .map((project, index) => {
+
+                        const style =
+                            difficultyStyles[project.difficulty]
+                            || "text-indigo-300 bg-indigo-500/10";
+
+                        return `
+                            <div class="card rounded-3xl p-6">
+
+                                <div class="flex justify-between items-start gap-3">
+
+                                    <div class="text-3xl">
+                                        ${["💡", "🚀", "🔥"][index] || "💼"}
+                                    </div>
+
+                                    <span class="px-3 py-1 rounded-full text-xs ${style}">
+                                        ${escapeHtml(project.difficulty)}
+                                    </span>
+
+                                </div>
+
+                                <h4 class="text-xl font-bold mt-5">
+                                    ${escapeHtml(project.title)}
+                                </h4>
+
+                                <p class="text-gray-400 text-sm leading-6 mt-3">
+                                    ${escapeHtml(project.description)}
+                                </p>
+
+                            </div>
+                        `;
+
+                    })
+                    .join("");
+
+
+            // Roles
+            renderRoles("entryRoles", data.roles?.entry || []);
+            renderRoles("midRoles", data.roles?.mid || []);
+            renderRoles("advancedRoles", data.roles?.advanced || []);
+
+
+            // Learning plan
+            document.getElementById("learningPlan").innerHTML =
+                (data.learningPlan || [])
+                    .map((item, index) => `
+                        <div class="p-5 rounded-2xl bg-white/[0.03] border border-white/5 flex gap-4">
+
+                            <div class="w-9 h-9 rounded-lg bg-indigo-500/10 text-indigo-300 flex items-center justify-center font-bold shrink-0">
+                                ${index + 1}
+                            </div>
+
+                            <p class="text-gray-300 leading-6">
+                                ${escapeHtml(item)}
+                            </p>
+
+                        </div>
+                    `)
+                    .join("");
+        }
+
+
+        function renderRoles(elementId, roles) {
+
+            document.getElementById(elementId).innerHTML =
+                roles
+                    .map(role => `
+                        <div class="flex items-center gap-3 text-gray-300">
+                            <span class="text-indigo-400">→</span>
+                            <span>${escapeHtml(role)}</span>
+                        </div>
+                    `)
+                    .join("");
+
+        }
+
+
+        function regenerate() {
+
+            localStorage.removeItem("careerDashboardCache");
+
+            generateCareerAdvice();
+
+        }
+
+
+        function escapeHtml(value) {
+
+            if (value === null || value === undefined) {
+                return "";
+            }
+
+            return String(value).replace(/[&<>"']/g, character => ({
+
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#039;"
+
+            }[character]));
+
+        }
+
+
+        window.onload = generateCareerAdvice;
+
+    </script>
+
 </body>
+
 </html>

@@ -1,100 +1,575 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Mock Interview | AI Advisor</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Mock Interview | AI Career Advisor</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background:
+                radial-gradient(circle at top left, rgba(79, 70, 229, 0.18), transparent 35%),
+                radial-gradient(circle at bottom right, rgba(124, 58, 237, 0.14), transparent 35%),
+                #080b18;
+        }
+
+        .glass {
+            background: rgba(17, 24, 39, 0.78);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+        }
+
+        .card {
+            background: rgba(15, 23, 42, 0.72);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+        }
+
+        .fade-up {
+            animation: fadeUp 0.7s ease forwards;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .pulse-dot {
+            animation: pulseDot 1.5s infinite;
+        }
+
+        @keyframes pulseDot {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.45;
+                transform: scale(0.85);
+            }
+        }
+
+        video {
+            transform: scaleX(-1);
+        }
+    </style>
 </head>
-<body class="bg-gray-900 text-white flex flex-col items-center justify-center min-h-screen p-6 space-y-6">
-  <h1 class="text-3xl font-bold text-indigo-400">🎤 Mock Interview</h1>
-  <video id="webcam" autoplay playsinline class="border-2 border-indigo-500 rounded-xl mb-4 max-w-md"></video>
 
-  <div class="glass bg-gray-800/80 p-6 rounded-xl text-center max-w-lg">
-    <h2 class="text-xl font-semibold text-purple-400 mb-2">💬 AI Question</h2>
-    <p id="question">Get ready for your first question...</p>
-    <h2 class="text-lg font-semibold text-green-400 mt-4">🗣 Your Answer</h2>
-    <p id="answer" class="italic text-gray-300">Waiting for your reply...</p>
-  </div>
+<body class="min-h-screen text-gray-200">
 
-  <button onclick="window.location.href='index.html'" 
-    class="bg-gray-700 px-6 py-3 rounded-xl hover:bg-gray-600 mt-6">⬅️ Back to Home</button>
+    <!-- HEADER -->
+    <header class="border-b border-white/5 bg-[#080b18]/90 backdrop-blur-xl sticky top-0 z-50">
 
-  <script>
-    const questions = [
-      "Tell me about yourself.",
-      "Why do you want to work in this field?",
-      "What’s your biggest strength?",
-      "What’s a challenge you overcame?",
-      "Where do you see yourself in 5 years?"
-    ];
+        <div class="max-w-7xl mx-auto px-6 lg:px-10 py-5">
 
-    let qIndex = 0;
-    const questionBox = document.getElementById("question");
-    const answerBox = document.getElementById("answer");
+            <div class="flex items-center justify-between gap-4">
 
-    function speak(text) {
-      const utter = new SpeechSynthesisUtterance(text);
-      utter.rate = 1;
-      utter.pitch = 1;
-      utter.voice = speechSynthesis.getVoices()[0];
-      speechSynthesis.speak(utter);
-    }
+                <div>
+                    <p class="text-xs sm:text-sm tracking-[0.28em] uppercase text-indigo-400 font-semibold">
+                        AI Career Advisor
+                    </p>
 
-    function listen(callback) {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (!SpeechRecognition) {
-        alert("❌ Speech recognition not supported in this browser.");
-        return;
-      }
-      const recognition = new SpeechRecognition();
-      recognition.lang = "en-US";
-      recognition.interimResults = false;
-      recognition.maxAlternatives = 1;
+                    <h1 class="text-2xl sm:text-3xl font-bold text-white mt-1">
+                        Mock Interview
+                    </h1>
+                </div>
 
-      recognition.onresult = (event) => {
-        const transcript = event.results[0][0].transcript;
-        answerBox.textContent = transcript;
-        callback();
-      };
-      recognition.onerror = () => {
-        answerBox.textContent = "⚠️ Couldn't catch that. Please try again.";
-        callback();
-      };
-      recognition.start();
-    }
+                <button
+                    onclick="window.location.href='index.html'"
+                    class="px-5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold transition shadow-lg shadow-indigo-900/20"
+                >
+                    ← Back
+                </button>
 
-    function askNextQuestion() {
-      if (qIndex < questions.length) {
-        const q = questions[qIndex];
-        questionBox.textContent = "❓ " + q;
-        speak(q);
+            </div>
 
-        setTimeout(() => {
-          answerBox.textContent = "Listening...";
-          listen(() => {
-            qIndex++;
-            setTimeout(askNextQuestion, 2000);
-          });
-        }, 3000);
-      } else {
-        questionBox.textContent = "✅ Interview finished! Well done.";
-        speak("Great job! The interview is complete.");
-      }
-    }
+        </div>
 
-    async function startInterview() {
-      const webcam = document.getElementById('webcam');
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        webcam.srcObject = stream;
-        askNextQuestion();
-      } catch (err) {
-        alert("⚠️ Please allow camera access.");
-      }
-    }
+    </header>
 
-    window.onload = startInterview;
-  </script>
+
+    <!-- MAIN -->
+    <main class="max-w-7xl mx-auto px-6 lg:px-10 py-8 lg:py-10">
+
+        <!-- INTRO -->
+        <section class="fade-up mb-8">
+
+            <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-5">
+
+                <div>
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full
+                                bg-indigo-500/10 border border-indigo-400/20
+                                text-indigo-300 text-sm font-medium mb-4">
+
+                        <span>🎤</span>
+                        <span>AI-Powered Interview Practice</span>
+
+                    </div>
+
+                    <h2 class="text-3xl lg:text-4xl font-bold text-white">
+                        Test Your Interview Skills
+                    </h2>
+
+                    <p class="text-gray-400 mt-3 max-w-2xl leading-7">
+                        Answer each question naturally. The AI interviewer will guide you
+                        through a short practice interview designed around common career questions.
+                    </p>
+                </div>
+
+                <!-- PROGRESS -->
+                <div class="card rounded-2xl px-5 py-4 min-w-[210px]">
+
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center justify-between gap-6 mb-3">
+    <span class="text-sm text-gray-400 whitespace-nowrap">
+        Interview Progress
+    </span>
+
+    <span id="progressText" class="text-sm font-semibold text-indigo-300 whitespace-nowrap">
+        Question 1 of 5
+    </span>
+</div>
+                    </div>
+
+                    <div class="w-full h-2 bg-gray-800 rounded-full overflow-hidden">
+
+                        <div
+                            id="progressBar"
+                            class="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full transition-all duration-500"
+                            style="width: 20%;"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- INTERVIEW GRID -->
+        <section class="grid lg:grid-cols-[1.35fr_0.65fr] gap-6 fade-up">
+
+            <!-- CAMERA -->
+            <div class="glass rounded-3xl p-5 lg:p-6 shadow-2xl">
+
+                <div class="flex items-center justify-between mb-5">
+
+                    <div>
+                        <h3 class="text-lg font-bold text-white">
+                            🎥 Interview Camera
+                        </h3>
+
+                        <p class="text-sm text-gray-500 mt-1">
+                            Keep your face visible and maintain eye contact.
+                        </p>
+                    </div>
+
+                    <div class="flex items-center gap-2 px-3 py-2 rounded-full bg-green-500/10 border border-green-500/20">
+
+                        <span class="w-2 h-2 rounded-full bg-green-400 pulse-dot"></span>
+
+                        <span class="text-xs font-medium text-green-300">
+                            Camera Active
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="relative overflow-hidden rounded-2xl border border-indigo-500/30 bg-black aspect-video">
+
+                    <video
+                        id="webcam"
+                        autoplay
+                        playsinline
+                        class="w-full h-full object-cover"
+                    ></video>
+
+                    <div class="absolute inset-0 pointer-events-none">
+
+                        <div class="absolute top-4 left-4 w-10 h-10 border-l-2 border-t-2 border-indigo-400/70 rounded-tl-lg"></div>
+
+                        <div class="absolute top-4 right-4 w-10 h-10 border-r-2 border-t-2 border-indigo-400/70 rounded-tr-lg"></div>
+
+                        <div class="absolute bottom-4 left-4 w-10 h-10 border-l-2 border-b-2 border-indigo-400/70 rounded-bl-lg"></div>
+
+                        <div class="absolute bottom-4 right-4 w-10 h-10 border-r-2 border-b-2 border-indigo-400/70 rounded-br-lg"></div>
+
+                    </div>
+
+                    <div class="absolute bottom-4 left-1/2 -translate-x-1/2">
+
+                        <div class="px-4 py-2 rounded-full bg-black/60 backdrop-blur-md text-xs text-gray-300 border border-white/10">
+                            AI Mock Interview
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="mt-5 grid grid-cols-2 gap-3">
+
+                    <div class="card rounded-xl p-4">
+
+                        <p class="text-xs text-gray-500">
+                            Interview Mode
+                        </p>
+
+                        <p class="font-semibold text-gray-200 mt-1">
+                            AI Guided
+                        </p>
+
+                    </div>
+
+                    <div class="card rounded-xl p-4">
+
+                        <p class="text-xs text-gray-500">
+                            Questions
+                        </p>
+
+                        <p class="font-semibold text-gray-200 mt-1">
+                            5 Questions
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- QUESTION PANEL -->
+            <div class="space-y-6">
+
+                <!-- AI QUESTION -->
+                <div class="glass rounded-3xl p-6 shadow-2xl">
+
+                    <div class="flex items-center gap-3 mb-5">
+
+                        <div class="w-11 h-11 rounded-xl bg-indigo-500/15
+                                    border border-indigo-400/20
+                                    flex items-center justify-center text-xl">
+                            🤖
+                        </div>
+
+                        <div>
+                            <p class="text-xs uppercase tracking-wider text-indigo-400 font-semibold">
+                                AI Interviewer
+                            </p>
+
+                            <h3 class="text-xl font-bold text-white">
+                                AI Question
+                            </h3>
+                        </div>
+
+                    </div>
+
+
+                    <div class="rounded-2xl bg-indigo-500/5 border border-indigo-400/10 p-5">
+
+                        <p id="question" class="text-lg text-gray-200 leading-8">
+                            Get ready for your first question...
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ANSWER -->
+                <div class="glass rounded-3xl p-6 shadow-2xl">
+
+                    <div class="flex items-center justify-between mb-5">
+
+                        <div class="flex items-center gap-3">
+
+                            <div class="w-11 h-11 rounded-xl bg-purple-500/15
+                                        border border-purple-400/20
+                                        flex items-center justify-center text-xl">
+                                🎙️
+                            </div>
+
+                            <div>
+                                <p class="text-xs uppercase tracking-wider text-green-400 font-semibold">
+                                    Speech Recognition
+                                </p>
+
+                                <h3 class="text-xl font-bold text-white">
+                                    Your Answer
+                                </h3>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="rounded-2xl bg-gray-900/60 border border-white/5 p-5 min-h-[150px]">
+
+                        <p
+                            id="answer"
+                            class="text-gray-400 italic leading-7"
+                        >
+                            Waiting for your reply...
+                        </p>
+
+                    </div>
+
+
+                    <div class="mt-4 flex items-center gap-2 text-sm text-gray-500">
+
+                        <span class="w-2 h-2 rounded-full bg-gray-600"></span>
+
+                        <span>
+                            Speak clearly when prompted.
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- FOOTER NOTE -->
+        <section class="mt-6 fade-up">
+
+            <div class="card rounded-2xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+
+                <div class="flex items-center gap-3">
+
+                    <div class="w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center">
+                        💡
+                    </div>
+
+                    <div>
+                        <p class="font-semibold text-gray-200">
+                            Interview Tip
+                        </p>
+
+                        <p class="text-sm text-gray-500">
+                            Take a moment to think before answering.
+                        </p>
+                    </div>
+
+                </div>
+
+                <span class="text-xs text-gray-600">
+                    Powered by AI Career Advisor
+                </span>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- EXISTING INTERVIEW LOGIC -->
+    <script>
+
+        const questions = [
+            "Tell me about yourself.",
+            "Why do you want to work in this field?",
+            "What is your biggest strength?",
+            "What is a challenge you overcame?",
+            "Where do you see yourself in 5 years?"
+        ];
+
+        let qIndex = 0;
+
+        const questionBox = document.getElementById("question");
+        const answerBox = document.getElementById("answer");
+
+        function updateProgress() {
+
+            const total = questions.length;
+
+            const current = Math.min(qIndex + 1, total);
+
+            const percentage = (current / total) * 100;
+
+            document.getElementById("progressText").textContent =
+                `Question ${current} of ${total}`;
+
+            document.getElementById("progressBar").style.width =
+                `${percentage}%`;
+        }
+
+
+        function speak(text) {
+
+            const utter = new SpeechSynthesisUtterance(text);
+
+            utter.rate = 1;
+            utter.pitch = 1;
+
+            const voices = speechSynthesis.getVoices();
+
+            if (voices.length > 0) {
+                utter.voice = voices[0];
+            }
+
+            speechSynthesis.speak(utter);
+        }
+
+
+        function listen(callback) {
+
+            const SpeechRecognition =
+                window.SpeechRecognition ||
+                window.webkitSpeechRecognition;
+
+            if (!SpeechRecognition) {
+
+                answerBox.textContent =
+                    "❌ Speech recognition is not supported in this browser.";
+
+                callback();
+
+                return;
+            }
+
+            const recognition = new SpeechRecognition();
+
+            recognition.lang = "en-US";
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 1;
+
+
+            answerBox.innerHTML = `
+                <div class="flex items-center gap-3 text-indigo-300">
+                    <span class="w-3 h-3 rounded-full bg-indigo-400 pulse-dot"></span>
+                    <span>Listening to your answer...</span>
+                </div>
+            `;
+
+
+            recognition.onresult = (event) => {
+
+                const transcript =
+                    event.results[0][0].transcript;
+
+                answerBox.textContent = transcript;
+
+                callback();
+            };
+
+
+            recognition.onerror = () => {
+
+                answerBox.textContent =
+                    "⚠️ Couldn't catch that. Please try again.";
+
+                callback();
+            };
+
+
+            recognition.start();
+        }
+
+
+        function askNextQuestion() {
+
+            if (qIndex < questions.length) {
+
+                const q = questions[qIndex];
+
+                questionBox.textContent = q;
+
+                updateProgress();
+
+                speak(q);
+
+
+                setTimeout(() => {
+
+                    listen(() => {
+
+                        qIndex++;
+
+                        setTimeout(
+                            askNextQuestion,
+                            2000
+                        );
+
+                    });
+
+                }, 3000);
+
+            } else {
+
+                document.getElementById("progressText").textContent =
+                    "Completed";
+
+                document.getElementById("progressBar").style.width =
+                    "100%";
+
+                questionBox.innerHTML = `
+                    <span class="text-green-400 font-semibold">
+                        ✅ Interview completed!
+                    </span>
+                `;
+
+                answerBox.textContent =
+                    "Great job! Your mock interview is complete.";
+
+                speak(
+                    "Great job! The interview is complete."
+                );
+            }
+        }
+
+
+        async function startInterview() {
+
+            const webcam =
+                document.getElementById("webcam");
+
+            try {
+
+                const stream =
+                    await navigator.mediaDevices.getUserMedia({
+                        video: true
+                    });
+
+                webcam.srcObject = stream;
+
+                askNextQuestion();
+
+            } catch (err) {
+
+                alert(
+                    "⚠️ Please allow camera access to start the mock interview."
+                );
+
+            }
+        }
+
+
+        window.onload = startInterview;
+
+    </script>
+
 </body>
 </html>
