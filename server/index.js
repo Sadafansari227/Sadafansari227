@@ -376,6 +376,8 @@ app.get("/api/students", (req, res) => {
     }
 });
 
-app.listen(PORT, () => {
-    console.log(`🚀 Career Advisor backend running at http://localhost:${PORT}`);
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, "0.0.0.0", () => {
+    console.log(`🚀 Career Advisor backend running on port ${PORT}`);
 });
